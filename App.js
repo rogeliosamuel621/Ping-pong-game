@@ -1,3 +1,10 @@
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+var x = canvas.width/2;
+var y = canvas.height-35;
+var dx = 5;
+var dy = -5;
+
 class Player{
     constructor(score, lives) {
         this.Score = score,
@@ -11,10 +18,6 @@ class Player{
 
 class Interface{
     constructor() {
-        this.canvas = document.getElementById('canvas');
-        this.ctx = canvas.getContext('2d');
-        this.x = this.canvas.with/2;
-        this.y = this.canvas.height-30;
         this.blockRows = 3;
         this.blockColumns = 6;
         this.blockWidth = 100;
@@ -28,26 +31,31 @@ class Interface{
     }
 
     drawBall() {
-        this.ctx.beginPath();
-        this.ctx.arc(400, 430, 10, 0, Math.PI*2);
-        this.ctx.fillStyle = "#ffffff";
-        this.ctx.fill();
-        this.ctx.closePath();
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.arc(x, y, 10, 0, Math.PI*2);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        ctx.closePath();
+
+        x += dx;
+        y += dy;
     }
 
     drawPaddle() {
-        this.ctx.beginPath();
-        this.ctx.rect(350, 460, 100, 15);
-        this.ctx.fillStyle = "#ffffff"
-        this.ctx.fill();
-        this.ctx.closePath();
+        ctx.beginPath();
+        ctx.rect(350, 460, 100, 15);
+        ctx.fillStyle = "#ffffff"
+        ctx.fill();
+        ctx.closePath();
     }
 
     drawBlocks() {
 
         var blocks = []; //Filling the dinamic matriz
         for(let c=0; c<this.blockColumns; c++) {
-            
+
             blocks[c] = [];
             for(let r=0; r<this.blockRows; r++) {
                 blocks[c][r] = { x: 0, y: 0 };
@@ -64,14 +72,19 @@ class Interface{
                 blocks[c][r].x = blockX;
                 blocks[c][r].y = BlockY;
 
-                this.ctx.beginPath();
-                this.ctx.rect(blockX,BlockY,this.blockWidth, this.blockHeight);
-                this.ctx.fillStyle = '#ffffff';
-                this.ctx.fill();
-                this.ctx.closePath();
+                ctx.beginPath();
+                ctx.rect(blockX,BlockY,this.blockWidth, this.blockHeight);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+                ctx.closePath();
             }
         }
     }
 }
 
-const interface = new Interface();
+function frame() {
+    const interface = new Interface();
+    requestAnimationFrame(frame)
+}
+
+frame();
