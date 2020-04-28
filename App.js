@@ -30,6 +30,7 @@ for(c=0; c<blockColumns; c++) {
 
 document.addEventListener("keydown", doing, false);
 document.addEventListener("keyup", stop, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
 
 function doing(e) {
 
@@ -48,6 +49,13 @@ function stop(e) {
     }
     else if(e.keyCode == 37) {
         left = false;
+    }
+}
+
+function mouseMoveHandler(e) {
+    var relativeX = e.clientX - canvas.offsetLeft;
+    if(relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX - paddleWidth/2;
     }
 }
 
@@ -175,7 +183,7 @@ class Interface{
                         blockCount++;
                         score++;
                         if(blockCount === (blockColumns*blockRows)) {
-                            alert('Has ganado');
+                            alert('Has ganado\nTu record fue:' + score);
                             document.location.reload();
                         }
                     }
@@ -186,13 +194,15 @@ class Interface{
 
     drawLivesNScore() {
 
-        ctx.font = "16px Arial";
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText("Score: "+score, 10, 15);
+        const player = new Player(score,lives);
 
         ctx.font = "16px Arial";
         ctx.fillStyle = "#ffffff";
-        ctx.fillText("vidas: "+lives,canvas.width-80,15);
+        ctx.fillText("Score: " + player.Score, 10, 15);
+
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText("vidas: " + player.Lives,canvas.width-80,15);
     }
 }
 
