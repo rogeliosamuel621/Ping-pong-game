@@ -9,7 +9,21 @@ var paddleWidth = 100;
 var paddleHeight = 15;
 var right = false;
 var left = false;
-var blocks = 0;
+var blockRows = 3;
+var blockColumns = 6;
+var blockWidth = 100;
+var blockHeight = 30;
+var blockPadding = 10;
+var blockMarginTop = 30;
+var blockMarginLeft = 70;
+
+var blocks = [];
+for(c=0; c<blockColumns; c++) {
+    blocks[c] = [];
+    for(r=0; r<blockRows; r++) {
+        blocks[c][r] = { x: 0, y: 0, status: 1};
+    }
+}
 
 document.addEventListener("keydown", doing, false);
 document.addEventListener("keyup", stop, false);
@@ -61,19 +75,12 @@ frame1();
 
 class Interface{
     constructor() {
-        this.ballRadius = 10
-        this.blockRows = 3;
-        this.blockColumns = 6;
-        this.blockWidth = 100;
-        this.blockHeight = 30;
-        this.blockPadding = 10;
-        this.blockMarginTop = 30;
-        this.blockMarginLeft = 70;
+        this.ballRadius = 10;
         this.drawBall();
         this.drawPaddle();
         this.drawBlocks();
         this.bounce();
-        this.destroyBlocks();
+        this.Crush();
     }
 
     drawBall() {
@@ -99,27 +106,18 @@ class Interface{
 
     drawBlocks() {
 
-        blocks = []; //Filling the dinamic matriz
-        for(let c=0; c<this.blockColumns; c++) {
-
-            blocks[c] = [];
-            for(let r=0; r<this.blockRows; r++) {
-                blocks[c][r] = { x: 0, y: 0, status: 1};
-            }
-        }
-
-        for(let c=0; c<this.blockColumns; c++) { //printing
-            for(let r=0; r<this.blockRows; r++) {
+        for(let c=0; c<blockColumns; c++) { //printing
+            for(let r=0; r<blockRows; r++) {
 
                 if(blocks[c][r].status == 1) {
-                    var blockX = (c*(this.blockWidth+this.blockPadding))+this.blockMarginLeft;
-                    var BlockY = (r*(this.blockHeight+this.blockPadding))+this.blockMarginTop;
+                    var blockX = (c*(blockWidth+blockPadding))+blockMarginLeft;
+                    var BlockY = (r*(blockHeight+blockPadding))+blockMarginTop;
 
                     blocks[c][r].x = blockX;
                     blocks[c][r].y = BlockY;
 
                     ctx.beginPath();
-                    ctx.rect(blockX,BlockY,this.blockWidth, this.blockHeight);
+                    ctx.rect(blockX,BlockY,blockWidth, blockHeight);
                     ctx.fillStyle = '#ffffff';
                     ctx.fill();
                     ctx.closePath();
@@ -144,15 +142,14 @@ class Interface{
         }
     }
 
-    destroyBlocks() {
-        for(let c=0; c<this.blockColumns; c++) {
-            for(let r=0; r<this.blockRows; r++) {
-                var block = blocks[c][r];
-                if(block.status == 1) {
-                    if(x > block.x && x < block.x+this.blockWidth && y > block.y && y < block.y+this.blockHeight) {
-
+    Crush() {
+        for(c=0; c<blockColumns; c++) {
+            for(r=0; r<blockRows; r++) {
+                var b = blocks[c][r];
+                if(b.status == 1) {
+                    if(x > b.x && x < b.x+blockWidth && y > b.y && y < b.y+blockHeight) {
                         dy = -dy;
-                        block.status = 0;
+                        b.status = 0;
                     }
                 }
             }
